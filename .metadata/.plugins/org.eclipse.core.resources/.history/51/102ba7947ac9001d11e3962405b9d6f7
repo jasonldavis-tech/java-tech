@@ -1,0 +1,38 @@
+package random;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+
+import testing.TestCase;
+import testing.TestResult;
+
+public class RandomUtilTest extends TestCase {
+	public RandomUtilTest() {
+		super(RandomUtilTest.class.getName());
+	}
+	
+	public static TestResult testGetRandomList() {
+		TestResult testResult = new TestResult("");
+		return testResult;
+	}
+	
+	public static TestResult testGetRandomElementInListOfStrings() {
+		TestResult testResult = new TestResult("");
+		String choiceSet[] = {
+			"String1",
+			"Sttring2"
+		};
+		ArrayList<String> listOfStrings = Arrays.asList(choiceSet);
+		
+		return testResult;	
+	}
+	
+	public static TestResult testGetRandomNumber() {
+		TestResult testResult = new TestResult("");
+		int lowerBound=0;
+		int upperBound=0;
+		return testResult;
+		
+	}
+	
+}

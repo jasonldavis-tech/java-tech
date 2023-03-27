@@ -1,0 +1,14 @@
+package data;
+
+import java.util.List;
+
+public class StringParseUtil {
+	public static List<String> sentenceToWordsList(String sentence) {
+		List<String> words = List.of((sentence).split(" ")); 
+	}
+	
+	public static String removePeriod(String sentence) {
+		return sentence.trim().replaceFirst(".", "");
+	}	
+
+}

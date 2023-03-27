@@ -1,0 +1,12 @@
+package data;
+
+public class InputValidationUtil {
+	
+	public static String flagPotentialMismatches(String sentence, String input) {
+		sentence =
+	}
+	
+	public static String removePeriod(String sentence) {
+		return sentence.replaceFirst(".", "");
+	}
+}

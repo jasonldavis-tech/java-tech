@@ -1,0 +1,10 @@
+package data;
+
+import testing.TestCase;
+
+public class InputValidationUtilTest extends TestCase {
+
+}
+
+// String 1: the money or other benefits lost whn pusuing a particular couse of action instead of a mutually-exclusive alternative
+// String 2: the money or other benefits lost when pursuing a particular course of action instead of a mutually-exclusive alternative

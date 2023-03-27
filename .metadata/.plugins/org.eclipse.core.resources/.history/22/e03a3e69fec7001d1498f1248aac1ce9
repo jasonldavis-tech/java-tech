@@ -1,0 +1,141 @@
+package graphicsView.render;
+
+import java.io.StringWriter;
+import java.util.logging.Logger;
+
+import commonController.ProcessKeyboardInputCommand;
+import commonModel.RenderEngineModel;
+import javafx.embed.swing.SwingFXUtils;
+import javafx.scene.image.WritableImage;
+import performance.PerformanceReading;
+import performance.PerformanceUtil;
+
+public class RenderEngine implements Runnable {
+	private int renderWidth;
+	private int renderHeight;
+	
+	public static Logger logger = Logger.getLogger(RenderEngine.class.getName());
+	
+	RenderEngineModel model;
+	
+	PerformanceUtil performanceUtil = new PerformanceUtil();
+	PerformanceUtil mainLoopPerformanceUtil = new PerformanceUtil();	
+	
+	public RenderEngine(final RenderEngineModel model, final double renderWidth, final double renderHeight) {
+		this.model=model;
+		this.renderWidth= (int) renderWidth;
+		this.renderHeight= (int) renderHeight;
+	}
+	
+	@Override
+	public void run() {
+		renderFrameLoop();
+	}
+	
+	int renders=0;
+	
+	private int multithreadRendersTime=0;
+	private int convertingBufferedImage=0;
+	private int loopTimeInMilliseconds=0;
+	private int processImageFiltersTime=0;
+	
+	public void logFPS() {		
+		final StringWriter performanceLogMessage = new StringWriter();
+		performanceLogMessage.append("Time required to render 30 frames: \n");
+		performanceLogMessage.append("MultithreadRender time: ");
+		performanceLogMessage.append(multithreadRendersTime+" ms\n");
+		performanceLogMessage.append("looptime: "+loopTimeInMilliseconds+" ms");
+						
+		log(performanceLogMessage.toString());
+		
+		resetPerformanceCounts();
+	}
+	
+	private void resetPerformanceCounts() {
+		renders=0;
+		multithreadRendersTime=0;
+		convertingBufferedImage=0;
+		loopTimeInMilliseconds=0;
+		processImageFiltersTime=0; 		
+	}
+	
+	boolean loggingEnabled = false;
+	
+	private void log(String message) {
+		if (loggingEnabled ){
+			logger.info(message);
+		}
+	}
+	
+	private void applyImageFilters() {
+		PerformanceReading timeRequired = PerformanceUtil.runAndTime("applImageFilters", () -> {
+			ProcessImageFiltersCommand processFilters = new ProcessImageFiltersCommand(model);
+			processFilters.run();
+		});
+		log(timeRequired.toString());		
+	}
+	
+	private WritableImage convertBufferedImageIntoImage() {
+		WritableImage image = new WritableImage(renderWidth, renderHeight);
+		SwingFXUtils.toFXImage(model.getBufferedImage(), image);	
+		return image;
+	}
+	
+
+	private void logPerformance() {
+		SleepAndLogPerformanceCommand sleepAndLogPerformanceCommand = new
+				SleepAndLogPerformanceCommand(model, performanceUtil);
+		sleepAndLogPerformanceCommand.run();
+		if (renders==30) {
+			logFPS();
+		} else {
+			renders++;
+		}
+	}
+	
+	private void processKeyboardInput() {
+		while (!model.getKeyBoardEventQueue().isEmpty()) {
+			ProcessKeyboardInputCommand command = new ProcessKeyboardInputCommand(model);
+			command.run();			
+		}		
+	}
+	
+	private void performMultithreadRender() {
+		MultithreadRender renderFrame = new MultithreadRender(model, renderWidth, renderHeight);
+		renderFrame.run();
+	}
+	
+	private void convertAndSend() {
+		WritableImage image = this.convertBufferedImageIntoImage();			
+		model.getConcurrentImageQueue().add(image);
+	}
+	
+	public void singleLoop() {
+		if (RenderEngineModel.isExitState()) {
+			log("Terminating main render loop");
+			return;
+		}
+		
+		if (model.isToggleRenderingOn()) {
+			
+			PerformanceReading multithreadRenderPerformance = PerformanceUtil.runAndTime("Multithread Render", this::performMultithreadRender);
+			multithreadRendersTime+=multithreadRenderPerformance.getMilliseconds();
+			
+			PerformanceReading processImageFiltersPerformance = PerformanceUtil.runAndTime("Image Filters", this::applyImageFilters);
+			processImageFiltersTime+=processImageFiltersPerformance.getMilliseconds();
+			
+			PerformanceReading convertAndSendPerformance = PerformanceUtil.runAndTime("Convert and Send", this::convertAndSend);
+			convertingBufferedImage+=convertAndSendPerformance.getMilliseconds();
+		}
+		
+		logPerformance();
+		processKeyboardInput();		
+	}
+	
+	public void renderFrameLoop() {
+		while (true) {			
+			PerformanceReading reading = PerformanceUtil.runAndTime("Render Loop", this::singleLoop);
+			loopTimeInMilliseconds += reading.getMilliseconds();
+		}		
+	}
+}

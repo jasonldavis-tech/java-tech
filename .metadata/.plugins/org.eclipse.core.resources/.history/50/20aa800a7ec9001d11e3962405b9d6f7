@@ -1,0 +1,13 @@
+package testing;
+
+import java.util.logging.Logger;
+
+import math.AdditionUtil;
+
+public class TestCase {
+	private TestLogger logger; 
+
+	public TestCase(String loggerName) {
+		logger = new TestLogger(Logger.getLogger(loggerName));	
+	}
+}

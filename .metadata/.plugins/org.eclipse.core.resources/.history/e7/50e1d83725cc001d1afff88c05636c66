@@ -1,0 +1,3 @@
+module ImaginationGenerator {
+	exports application;
+}

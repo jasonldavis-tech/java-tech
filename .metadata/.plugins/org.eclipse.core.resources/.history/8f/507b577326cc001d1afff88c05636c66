@@ -1,0 +1,7 @@
+VBox {
+	-fx-padding: 10px 10px 10px 10px;
+}
+
+Label {
+	-fx-font-size: 35;
+}

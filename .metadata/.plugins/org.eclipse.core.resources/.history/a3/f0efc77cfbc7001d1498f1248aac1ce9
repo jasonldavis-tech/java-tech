@@ -1,0 +1,23 @@
+package application.controller.eventHandlers;
+
+import java.util.logging.Logger;
+
+import application.ScreenContants;
+import javafx.scene.Scene;
+
+public class HandleResizeEvent implements Runnable {
+	private static Logger logger = Logger.getLogger(HandleResizeEvent.class.getName());
+	
+	private Scene scene;
+	
+	public HandleResizeEvent(Scene scene) {
+		this.scene = scene;
+	}
+
+	
+	@Override
+	public void run() {
+		logger.info("Resize Event");
+	}
+
+}

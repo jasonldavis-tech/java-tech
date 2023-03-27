@@ -1,0 +1,12 @@
+.mainElementCustomClass {
+	-fx-padding: 30px, 30px, 30px, 30px;
+	-fx-text-fill: blue;
+}
+
+TextField {
+	-fx-focus-color: #00CCFF;
+}
+
+VBox {
+	-fx-spacing: 20px;
+}

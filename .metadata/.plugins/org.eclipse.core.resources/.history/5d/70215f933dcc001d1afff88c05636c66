@@ -1,0 +1,159 @@
+package graphicsView.render.example;
+
+import java.util.concurrent.atomic.AtomicInteger;
+
+import graphics.TwoColorImage;
+
+public class TwoColorDrawingExample2 {
+	private static AtomicInteger zDepth = new AtomicInteger(500);
+	private static int pad=10;
+	
+	private static int getZInitial(int renderWidth) {
+		int z=0;
+		
+		for (int i=5; i>0; i--) {
+			z = zDepth.getAndDecrement();
+		}
+		
+		// z=z/2;
+		
+		if (z<=0)
+		{
+			zDepth.set(1000);
+		}
+		
+		return z;
+	}
+	
+	private static class Point {
+		public Point(int x, int y) {
+			this.x = x;
+			this.y = y;
+		}
+		
+		public Point() {
+			this(0,0);
+		}
+		
+		int x;
+		int y;
+	}
+	
+	private static class RectangleBounds {
+		Point topLeft = new Point();
+		Point bottomRight = new Point();
+		
+		public RectangleBounds(int x1, int y1, int x2, int y2) {
+			topLeft.x = x1;
+			topLeft.y = y1;
+			bottomRight.x = x2;
+			bottomRight.y = y2;
+		}
+		
+		public RectangleBounds(double x1, double y1, double x2, double y2) {
+			topLeft.x = (int) x1;
+			topLeft.y = (int) y1;
+			bottomRight.x = (int) x2;
+			bottomRight.y = (int) y2;
+		}
+		
+		public int getHeight() {
+			return bottomRight.y-topLeft.y;
+		}
+		
+		public int getWidth() {
+			return bottomRight.x-topLeft.x;
+		}		
+	}
+	
+	private static RectangleBounds getBoundingRectange(int renderWidth, int renderHeight) {
+		double zBound=renderWidth-(renderWidth/1.5);
+		double x1Bound=pad+zBound;
+		double y1Bound=pad+(zBound/2);
+		double x2Bound=renderWidth-pad-zBound;
+		double y2Bound=renderHeight-pad-(zBound/2);
+		RectangleBounds bounds = new RectangleBounds(x1Bound, y1Bound, x2Bound, y2Bound);
+		return bounds;		
+	}
+	
+	private static void drawBoundingRectangle(RectangleBounds bounds, TwoColorImage twoColorImage) {
+		twoColorImage.drawRectangeCoordinates(bounds.topLeft.x, bounds.topLeft.y, bounds.bottomRight.x, bounds.bottomRight.y);
+	}
+	
+	private static void limitToBounds(RectangleBounds rectangle, RectangleBounds bounds) {
+		if (rectangle.topLeft.x>bounds.topLeft.x) {
+			rectangle.topLeft.x = bounds.topLeft.x;
+		}		
+		if (rectangle.topLeft.y>bounds.topLeft.y) {
+			rectangle.topLeft.y = bounds.topLeft.y;
+		}		
+		if (rectangle.bottomRight.x<bounds.bottomRight.x) {
+			rectangle.bottomRight.x = bounds.bottomRight.x;
+		}
+		if (rectangle.bottomRight.y<bounds.bottomRight.y) {
+			rectangle.bottomRight.y = bounds.bottomRight.y;
+		}		
+	}
+	
+	private static void drawRectangle(TwoColorImage image, RectangleBounds rectangle) {
+		image.drawRectangeCoordinates(rectangle.topLeft.x,rectangle.topLeft.y,
+				rectangle.bottomRight.x, rectangle.bottomRight.y);
+	}
+	
+	private static void drawPerspectiveLines(TwoColorImage image, RectangleBounds bounds, int renderWidth, int renderHeight) {
+		// Top Left Corner
+		image.drawLine(0, 0, bounds.topLeft.x, bounds.topLeft.y);
+		
+		// Top Right Corner
+		image.drawLine(bounds.bottomRight.x, bounds.topLeft.y, renderWidth, 0);
+		
+		// Bottom Left Corner
+		image.drawLine(0, renderHeight, bounds.topLeft.x, bounds.bottomRight.y);
+		
+		// Bottom Right Corner
+		image.drawLine(bounds.bottomRight.x, bounds.bottomRight.y, renderWidth, renderHeight);
+	}
+	
+	public static void renderFrame(int renderWidth, int renderHeight, AtomicInteger yOffset, TwoColorImage twoColorImage) {		
+		int z=getZInitial(renderWidth);
+		
+		int xOffset=z*(renderWidth/renderHeight);
+		int yOffset2=(int) (z-(z/2));
+		
+		int x1=xOffset;
+		int y1=yOffset2;
+		int x2=renderWidth-xOffset;
+		int y2=renderHeight-yOffset2;
+		
+		RectangleBounds rectangle1 = new RectangleBounds(x1, y1, x2, y2);
+		RectangleBounds bounds = getBoundingRectange(renderWidth, renderHeight);
+		limitToBounds(rectangle1, bounds);
+		RectangleBounds rectangle2 = new RectangleBounds(x1+185, y1+100, x2-185, y2-100);
+		limitToBounds(rectangle2, bounds);
+		
+		Point line1Start = new Point(rectangle1.topLeft.x,rectangle1.topLeft.y+(rectangle1.getHeight()/3));
+		Point line1End = new Point(rectangle2.topLeft.x,rectangle2.topLeft.y+(rectangle2.getHeight()/3));
+		
+		// System.out.println("Line1Start.y="+line1Start.y);
+		
+		twoColorImage.drawLine(line1Start.x, line1Start.y, line1End.x, line1End.y);
+		
+		// System.out.println("Line1Start.x="+line1Start.y);
+		int line2XStart = rectangle1.topLeft.x+rectangle1.getWidth();
+		int line2XEnd = rectangle2.topLeft.x+rectangle2.getWidth();
+		
+		twoColorImage.drawLine(line2XEnd, line1End.y, line2XStart, line1Start.y);	
+		
+		twoColorImage.drawLine(rectangle1.topLeft.x-100, 0, rectangle1.topLeft.x-100, renderHeight);
+		twoColorImage.drawLine(rectangle1.bottomRight.x+100, 0, rectangle1.bottomRight.x+100, renderHeight);
+		
+		twoColorImage.drawLine(rectangle1.topLeft.x-100, rectangle2.topLeft.y+(rectangle2.getHeight()/3), rectangle1.topLeft.x, rectangle1.topLeft.y+(rectangle1.getHeight()/3));
+		twoColorImage.drawLine(rectangle2.bottomRight.x+100, rectangle2.topLeft.y+(rectangle2.getHeight()/3), rectangle1.bottomRight.x+100, rectangle1.topLeft.y+(rectangle1.getHeight()/3));
+
+		drawRectangle(twoColorImage, rectangle1);
+		drawRectangle(twoColorImage, rectangle2);
+		drawRectangle(twoColorImage, bounds);
+		drawPerspectiveLines(twoColorImage, bounds, renderWidth, renderHeight);
+	}
+	
+}

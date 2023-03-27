@@ -1,0 +1,22 @@
+package application.controller;
+
+import java.util.logging.Logger;
+
+import javafx.scene.Scene;
+
+public class HandleResizeEvent implements Runnable {
+	private Logger logger = Logger.getLogger(HandleResizeEvent.class.getName());
+	
+	private Scene scene;
+	
+	public HandleResizeEvent(Scene scene) {
+		this.scene = scene;
+	}
+
+	@Override
+	public void run() {
+		// TODO Auto-generated method stub
+
+	}
+
+}

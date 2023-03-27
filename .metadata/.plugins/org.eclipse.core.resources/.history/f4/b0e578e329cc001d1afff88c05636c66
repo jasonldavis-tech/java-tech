@@ -1,0 +1,75 @@
+package application;
+	
+import application.controller.EventBus;
+import application.controller.events.WindowResizeEvent;
+import javafx.application.Application;
+import javafx.stage.Stage;
+import story.StoryOutlineUtil;
+import javafx.scene.Node;
+import javafx.scene.Scene;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextFlow;
+
+
+public class Main extends Application {
+	final public static String APP_TITLE = "Imagination Generator"; 
+	VBox vbox = new VBox();	
+	Scene scene;
+	// TextFlow textFlow = new TextFlow();
+	// Text textOutput = new Text();
+	TextArea textOutput = new TextArea();
+
+	public void setupScene(Stage primaryStage) {
+		scene = new Scene(vbox,400,400);
+		scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
+		primaryStage.setScene(scene);
+		primaryStage.show();
+	}
+	
+	@Override
+	public void start(Stage primaryStage) {
+		try {			
+			setupScene(primaryStage);
+			primaryStage.setTitle(APP_TITLE);			
+			addTitleLabel();
+			addResizeScreenHandler();
+			textOutput.setPrefWidth(scene.getWidth());
+			textOutput.setPrefHeight(scene.getHeight()-100);
+			add(textOutput);
+			textOutput.setText(StoryOutlineUtil.generateStoryOutline());
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void addResizeScreenHandler() {		
+		scene.widthProperty().addListener((obs,oldValue,newValue)-> {
+			resize();
+		});
+		
+		scene.heightProperty().addListener((obs,oldValue,newValue)-> {
+			resize();
+		});
+	}
+	
+	public void resize() {
+		
+	}	
+	
+	public void add(Node node) {
+		vbox.getChildren().add(node);
+	}
+	
+	public void addTitleLabel() {
+		Label headerLabel = new Label(APP_TITLE);
+		vbox.getChildren().add(headerLabel);		
+	}
+	
+	public static void main(String[] args) {
+		launch(args);
+	}
+}

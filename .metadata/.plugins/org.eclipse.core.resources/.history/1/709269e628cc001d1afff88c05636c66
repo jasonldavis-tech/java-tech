@@ -1,0 +1,13 @@
+VBox {
+	-fx-padding: 30px 30px 30px 30px;
+	-fx-spacing: 10px;
+}
+
+Label {
+	-fx-font-size: 35;
+}
+
+TextArea {
+	-fx-background-color: #000000;
+	-fx-focus-color: default;
+}

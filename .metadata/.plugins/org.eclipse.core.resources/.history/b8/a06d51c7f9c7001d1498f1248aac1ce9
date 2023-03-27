@@ -1,0 +1,43 @@
+package application.controller.viewSetup;
+
+import application.controller.shutdown.SetupOnExitCommand;
+import commonController.SetupKeyboardListener;
+import commonModel.RenderEngineModel;
+import javafx.application.Application;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
+
+public class SetupInitialView implements Runnable {
+	private Application application;
+	private Stage primaryStage;	
+	private Parent root;
+	private Scene scene;
+	
+	public SetupInitialView(final Application application, final Stage primaryStage, final Parent root) {
+		this.application = application;
+		this.primaryStage = primaryStage;
+		this.root = root;
+	}
+	
+	@Override
+	public void run() {
+		SetupScene setupScene = new SetupScene(application,primaryStage,root);
+		setupScene.run();
+
+		Scene scene = setupScene.getGeneratedScene();
+		VBox vbox = setupScene.getGeneratedVBox();
+		
+		WireStreamViewToRenderEngine setupStreamViewComponent = new WireStreamViewToRenderEngine(vbox);
+		setupStreamViewComponent.run();
+		RenderEngineModel model = setupStreamViewComponent.getGeneratedModel();
+		
+		SetupKeyboardListener setupKeyboardListener = new SetupKeyboardListener(scene, model);
+		setupKeyboardListener.run();
+		
+		SetupOnExitCommand setupOnExitCommand = new SetupOnExitCommand(primaryStage, model);
+		setupOnExitCommand.run();
+	}
+
+}

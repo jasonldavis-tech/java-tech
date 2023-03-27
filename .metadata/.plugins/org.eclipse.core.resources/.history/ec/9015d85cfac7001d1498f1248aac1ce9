@@ -1,0 +1,11 @@
+package application.controller;
+
+public class HandleResizeEvent implements Runnable {
+
+	@Override
+	public void run() {
+		// TODO Auto-generated method stub
+
+	}
+
+}

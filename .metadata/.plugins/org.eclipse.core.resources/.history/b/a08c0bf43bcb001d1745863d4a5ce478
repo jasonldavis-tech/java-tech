@@ -1,0 +1,29 @@
+package math;
+
+import java.util.HashMap;
+
+public class LazyLoadedMathUtil {
+	private static HashMap<String, Double> sineMap = new HashMap<>();
+	private static HashMap<String, Double> cosineMap = new HashMap<>();
+	private static HashMap<String, Double> tanMap = new HashMap<>();
+	
+	public double sine(double radians) {
+		String parameter = String.format("%.3f",radians);
+		Double value = sineMap.get(String.format("%.3f", radians));
+		if (null!=value) {
+			return value;
+		}
+		value = Math.sin(radians);
+		sineMap.put(null, value);
+		
+	}	
+
+	public double cos(double radians) {
+		
+	}
+	
+	public double tan(double radians) {
+		
+	}	
+	
+}

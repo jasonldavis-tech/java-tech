@@ -1,0 +1,6 @@
+application\controller\AppController$1.class
+application\TestRunner.class
+module-info.class
+application\controller\LoadCssCommand.class
+application\controller\RunTestsCommand.class
+application\controller\AppController.class

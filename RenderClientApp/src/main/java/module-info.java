@@ -1,0 +1,14 @@
+module RenderClientApp {
+	requires javafx.controls;
+	requires javafx.fxml;
+	requires transitive java.logging;
+	requires transitive java.desktop;
+	requires java.base;
+	requires FileUtilityLibrary;
+	requires org.apache.commons.imaging;
+	requires javafx.swing;
+	requires GraphicsUtilityLibrary;
+	
+	opens application to javafx.graphics, javafx.fxml;
+	opens application.controller to javafx.fxml;
+}

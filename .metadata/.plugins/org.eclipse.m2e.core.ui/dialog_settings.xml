@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<section name="Workbench">
+	<section name="MavenProjectImportWizardPage">
+		<list key="rootDirectory">
+			<item value="C:\Users\jason\eclipse-workspace2"/>
+			<item value="C:\Users\jason\eclipse-workspace2\PatternUtil"/>
+			<item value="C:\Users\jason\eclipse-workspace2\FileUtilityLibrary"/>
+		</list>
+		<list key="projectNameTemplate">
+			<item value="[artifactId]"/>
+			<item value="[artifactId]-TRUNK"/>
+			<item value="[artifactId]-[version]"/>
+			<item value="[groupId].[artifactId]"/>
+			<item value="[groupId].[artifactId]-[version]"/>
+			<item value="[name]"/>
+		</list>
+	</section>
+	<section name="org.eclipse.m2e.core.pom.overview">
+	</section>
+	<section name="org.eclipse.m2e.core.pom.dependencies">
+	</section>
+	<section name="wizardPage">
+		<list key="groupId">
+			<item value="ImaginationGenerator"/>
+			<item value="ThroughputAmplifier"/>
+		</list>
+		<list key="name">
+		</list>
+		<list key="artifactId">
+			<item value="ImaginationGenerator"/>
+			<item value="ThroughputAmplifier"/>
+		</list>
+		<list key="version">
+			<item value="0.0.1-SNAPSHOT"/>
+		</list>
+	</section>
+</section>

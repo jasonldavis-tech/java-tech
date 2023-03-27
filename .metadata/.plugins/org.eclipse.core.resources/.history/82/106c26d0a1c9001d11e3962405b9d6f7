@@ -1,0 +1,168 @@
+package application.controller;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.logging.Handler;
+import java.util.logging.LogRecord;
+import java.util.logging.Logger;
+
+import color.AsciiColorUtil;
+import compression.CompressionUtilTest;
+import file.HtmlUtil;
+import graphicsView.components.ViewComponentUtil;
+import javafx.application.Application;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.web.HTMLEditor;
+import javafx.stage.Stage;
+import math.AdditionUtilTest;
+import random.RandomUtilTest;
+import testing.TestResult;
+
+public class AppController {
+	private static Logger logger = Logger.getLogger(AppController.class.getName());
+	
+	Application application;
+	Scene scene;
+	Stage primaryStage;
+	int width;
+	int height;
+	
+	Parent root;
+	HashMap<String, Node> idMap;
+	
+	public Parent getRoot() {
+		return root;
+	}
+
+	public void setRoot(Parent root) {
+		this.root = root;
+		idMap=ViewComponentUtil.getIdNodeMap(root);
+	}	
+	
+	public int getWidth() {
+		return width;
+	}
+
+	public void setWidth(int width) {
+		this.width = width;
+	}
+
+	public int getHeight() {
+		return height;
+	}
+
+	public void setHeight(int height) {
+		this.height = height;
+	}
+
+	public Application getApplication() {
+		return application;
+	}
+
+	public void setApplication(Application application) {
+		this.application = application;
+	}
+
+	public Scene getScene() {
+		return scene;
+	}
+
+	public void setScene(Scene scene) {
+		this.scene = scene;
+	}
+
+	public Stage getPrimaryStage() {
+		return primaryStage;
+	}
+
+	public void setPrimaryStage(Stage primaryStage) {
+		this.primaryStage = primaryStage;
+	}
+	
+	HTMLEditor textAreaOutput;
+	
+	public void launchStartupSequence() {
+		scene = new Scene(root,width,height);
+		
+		LoadCssCommand loadCssComand = new LoadCssCommand(application,scene);
+		loadCssComand.run();
+		
+		primaryStage.setScene(scene);
+		primaryStage.show();
+		textAreaOutput = (HTMLEditor) idMap.get("textAreaOutputConsole");
+		
+		redirectSystemOutToTextArea();
+	}
+	
+	public void redirectSystemOutToTextArea() {
+		Logger.getLogger("").addHandler(new Handler() {
+			
+			@Override
+			public void publish(LogRecord record) {
+				// TODO Auto-generated method stub
+				String removeAsciiColor = AsciiColorUtil.stripAsciiColorsFromString(record.getMessage());
+				String messageAsHtml = HtmlUtil.createHtmlParagraphsFromEndlines(removeAsciiColor);
+				textAreaOutput.setHtmlText(textAreaOutput.getHtmlText()+messageAsHtml);
+			}
+
+			@Override
+			public void flush() {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void close() throws SecurityException {
+				// TODO Auto-generated method stub
+				
+			}
+		});
+
+	    runTestCases();
+	}
+	
+	public void runTestCases() {
+		ArrayList<TestResult> testResults = new ArrayList<>();
+		TestResult testResult = null;
+		
+		AdditionUtilTest additionUtilTest = new AdditionUtilTest();
+		testResult = additionUtilTest.testSumListOfIntegers();
+		testResults.add(testResult);
+		
+		testResult = null;
+		CompressionUtilTest compressionUtilTest = new CompressionUtilTest();
+		testResult = compressionUtilTest.testZipUnzipString();
+		testResults.add(testResult);
+		
+		
+		RandomUtilTest randomUtilTest = new RandomUtilTest();
+		
+		testResult = null;
+		testResult = randomUtilTest.testGetRandomElementInListOfStrings();
+		testResults.add(testResult);
+		
+		testResult = null;
+		testResult = randomUtilTest.testGetRandomList();
+		testResults.add(testResult);
+		
+		testResult = null;
+		testResult = randomUtilTest.testGetRandomNumber();
+		testResults.add(testResult);		
+		
+		logger.info(testResults.toString());
+		
+		ObservableList<TestResult> observableTestResults = FXCollections.observableList(testResults);
+		TableView<TestResult> tableView = (TableView) idMap.get("tableViewTestResults");
+		TableColumn<TestResult, String> tableColumn = new TableColumn<TestResult, String>();
+		
+		tableColumn.setText("testName");
+		tableView.getColumns().add(tableColumn);
+		tableView.setItems(observableTestResults);	
+	}
+}

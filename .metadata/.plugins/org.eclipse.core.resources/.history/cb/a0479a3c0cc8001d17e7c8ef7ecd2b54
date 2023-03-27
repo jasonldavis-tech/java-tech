@@ -1,0 +1,91 @@
+package graphicsView.render;
+
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.logging.Logger;
+
+import color.AsciiColorUtil;
+import graphics.TwoColorImage;
+
+public class RenderPartialFrame implements Runnable {
+	private static Logger logger = Logger.getLogger(RenderPartialFrame.class.getName());
+	int xOffset;
+	int renderWidth;
+	int renderHeight;
+	private boolean rendered=false;
+	public boolean isRendered() {
+		return rendered;
+	}
+
+	private TwoColorImage twoColorImage;
+
+	public TwoColorImage getTwoColorImage() {
+		return twoColorImage;
+	}
+
+	final String name;
+	
+	public RenderPartialFrame(String name, int renderWidth, int renderHeight)
+    {
+		this.name = name;
+		this.renderWidth = renderWidth;
+		this.renderHeight = renderHeight;
+		twoColorImage = new TwoColorImage(renderWidth,renderHeight);
+	}
+	
+	public int getxOffset() {
+		return xOffset;
+	}
+
+	public void setxOffset(int xOffset) {
+		this.xOffset = xOffset;
+	}
+
+	@Override
+	public void run() {
+		renderFrame();
+	}
+	
+	private boolean loggingEnabled = false;
+	
+	private void log(String message) {
+		if (loggingEnabled) {
+			logger.info(AsciiColorUtil.BLUE+name+" - "+message+AsciiColorUtil.DEFAULT);
+		}
+	}
+	
+	public static AtomicInteger yOffset = new AtomicInteger();
+	
+	public void renderFrame() {		
+		int y = yOffset.getAndIncrement();
+		y+=10;
+		yOffset.set(y);
+		if (y>twoColorImage.getHeight()) {
+			yOffset.set(0);
+		}
+		
+		y=0;
+		
+		twoColorImage.drawLine(0, 0+y, renderWidth-10, renderHeight-10+y);
+		twoColorImage.drawLine(0, 150+y, 300, 150+y);
+		twoColorImage.drawLine(10, 0+y, 10, renderHeight-1+y);
+		twoColorImage.drawLine(20, 0+y, 20, renderHeight-1+y);
+		
+		twoColorImage.drawLine(0, 10+y, renderWidth-1, 10+y);
+		
+		twoColorImage.drawLine(15, 150+y, renderWidth-15, 10+y);
+		twoColorImage.drawLine(renderWidth-30, 150+y, 15, 150+y); // Horizontal Line
+		
+		twoColorImage.drawLine(15, 350+y, renderWidth-15, 210+y);
+		twoColorImage.drawLine(renderWidth-30, 350+y, 15, 350+y); // Horizontal Line
+		
+		twoColorImage.drawLine(15, 550+y, renderWidth-15, 410+y);
+		twoColorImage.drawLine(renderWidth-30, 550+y, 15, 550+y); // Horizontal Line
+		
+		twoColorImage.drawLine(15, 750+y, renderWidth-15, 610+y);
+		twoColorImage.drawLine(renderWidth-30, 750+y, 15, 750+y); // Horizontal Line				
+
+	    twoColorImage.drawRectangeCoordinates(0, 150, 65, 350);
+		
+		rendered=true;
+	}
+}

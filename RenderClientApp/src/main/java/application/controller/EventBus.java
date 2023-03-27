@@ -1,0 +1,44 @@
+package application.controller;
+
+import java.util.HashMap;
+import java.util.Vector;
+import java.util.function.Consumer;
+import java.util.logging.Logger;
+
+public class EventBus {
+	private static Logger logger = Logger.getLogger(EventBus.class.getName());
+	private static EventBus instance;
+	private HashMap<String, Vector<Consumer<String>>> eventHandlers = new HashMap<>();
+	
+	public static EventBus get() {
+		if (null==instance) {
+			instance = new EventBus();
+		}
+		
+		return instance;
+	}
+	
+	public void addHandler(String eventName, Consumer<String> handler) {
+		if (null==eventHandlers.get(eventName)) {
+			Vector<Consumer<String>> eventHandlersForEvent = new Vector<>();
+			eventHandlers.put(eventName, eventHandlersForEvent);
+		}
+		Vector<Consumer<String>> handlers = eventHandlers.get(eventName);
+		handlers.add(handler);
+	}
+	
+	public void dispatchEvent(final String eventName, final String eventMessage) {		
+		if (null!=eventHandlers.get(eventName)) {
+			logger.info("Event ["+eventName+"] dispatched and has handlers.");
+			Vector<Consumer<String>> handlers = eventHandlers.get(eventName);
+			handlers.forEach((consumerMethod) -> {
+				if (null!=consumerMethod) {
+					consumerMethod.accept(eventMessage);
+				}
+			});
+		} else {
+			logger.info("Event ["+eventName+"] dispatched but has not handlers.");
+		}
+	}
+
+}

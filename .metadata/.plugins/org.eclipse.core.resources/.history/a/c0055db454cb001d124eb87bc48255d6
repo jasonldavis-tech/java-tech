@@ -1,0 +1,87 @@
+package process;
+
+import java.util.ArrayList;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.logging.Logger;
+
+import multithreading.ThreadUtil;
+
+public class ThreadOrderProcessUtil {
+	private static Logger logger = Logger.getLogger(ThreadOrderProcessUtil.class.getName());
+	
+	private static void log(boolean enableLog, final String message) {
+		if (enableLog) {
+			// System.out.println(message);
+			logger.info(message);
+		}
+	}
+	
+	public static ProcessComplete runSequentialProcess(String processName, ArrayList<Runnable> sequentialProcessList, 
+			boolean enableLog) {
+		log(enableLog,processName+" started");
+		
+		try {
+			for (int i=0; i<sequentialProcessList.size(); i++) {			
+				Runnable step = sequentialProcessList.get(i);
+				log(enableLog,processName+" running step "+i);
+				step.run();
+				log(enableLog,processName+" completed step "+i);
+			}
+			
+			log(enableLog,processName+" finished successfully");
+			return new ProcessComplete(true, true);
+		} catch (Exception e) {
+			return new ProcessComplete(true, false);
+		}
+	}
+	
+	
+	
+	public static ArrayList<Runnable> lastProcessed;
+	
+	// Method that runs a set of Parallel tasks and then blocks/sleeps/polls until all
+	// queued threads are complete
+	// *********************************************
+	// TODO: Fix nasty buy where process shows as completed does not line up with versioning on classes
+	public static ProcessComplete runParallelProcess(String processName, ArrayList<Runnable> parallelProcessList,
+			boolean enableLog)
+	{
+		log(enableLog,processName+" started");
+		
+		final ConcurrentHashMap<Integer, Boolean> completedMap = new ConcurrentHashMap<>();
+		
+		try {
+			for (int i=0; i<parallelProcessList.size(); i++) {			
+				Runnable step = parallelProcessList.get(i);
+				log(enableLog,processName+" queueing step "+i);
+				final int stepId=i;
+				ThreadUtil.addTask(() -> {
+					step.run();
+					completedMap.put(stepId, true);
+					// System.out.println("Step "+stepId+" has completed");
+				});
+			}
+			
+			boolean waiting=true;
+			
+			while (waiting) {				
+				if (completedMap.size()==parallelProcessList.size())
+				{
+					waiting=false;
+				}
+				
+				try {
+					Thread.sleep(100);
+				} catch (InterruptedException e) {
+					
+				}
+			}
+			
+			lastProcessed = parallelProcessList;
+			log(enableLog,processName+" finished successfully"); // Causing JVM to exit for some reason
+			return new ProcessComplete(true, true);
+		} catch (Exception e) {
+			return new ProcessComplete(true, false);
+		}		
+	}
+}

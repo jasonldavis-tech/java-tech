@@ -1,0 +1,10 @@
+package data;
+
+public class StringUtil {
+	public static
+	
+	public static String removePeriod(String sentence) {
+		return sentence.replaceFirst(".", "");
+	}	
+
+}

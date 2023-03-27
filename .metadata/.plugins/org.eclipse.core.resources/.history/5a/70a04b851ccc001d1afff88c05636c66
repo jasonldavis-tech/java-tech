@@ -1,0 +1,23 @@
+package data;
+
+import testing.TestCase;
+import testing.TestResult;
+
+public class InputValidationUtilTest extends TestCase {
+	public TestResult testFlagPotentialMismatches() {
+		TestResult testResult = new TestResult("testFlagPotentialMismatches");
+		String input =  "the money or other benefits lost whn pusuing a particular couse of action instead of a mutually-exclusive alternative";
+		String correct = "the money or other benefits lost when pursuing a particular course of action instead of a mutually-exclusive alternative";		
+		
+		String mismatch = InputValidationUtil.flagPotentialMismatches(correct, input);
+		
+		if (mismatch.compareTo("when")==0) {
+			testResult.setTestSuccessful(true);
+		} else {
+			testResult.setTestSuccessful(false);
+		}
+		
+		return testResult;
+	}
+
+}

@@ -1,0 +1,8 @@
+application\RenderServerApp.class
+module-info.class
+application\controller\LoadCssCommand.class
+application\controller\viewSetup\SetupInitialView.class
+application\controller\AppController.class
+application\controller\input\ProcessKeyboardInputCommand.class
+application\controller\viewSetup\SetupScene.class
+application\controller\input\SetupKeyboardListener.class

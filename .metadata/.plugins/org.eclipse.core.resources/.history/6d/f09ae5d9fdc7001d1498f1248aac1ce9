@@ -1,0 +1,37 @@
+package application.controller;
+
+import java.util.HashMap;
+import java.util.Vector;
+import java.util.function.Consumer;
+
+public class EventBus {
+	private static EventBus instance;
+	private HashMap<String, Vector<Consumer<String>>> eventHandlers = new HashMap<>();
+	
+	public static EventBus get() {
+		if (null==instance) {
+			instance = new EventBus();
+		}
+		
+		return instance;
+	}
+	
+	public void addHandler(String eventName, Consumer handler) {
+		if (null==eventHandlers.get(eventName)) {
+			Vector<Consumer<String>> eventHandlersForEvent = new Vector<>();
+			eventHandlers.put(eventName, eventHandlersForEvent);
+		}
+		Vector<Consumer<String>> handlers = eventHandlers.get(eventName);
+		handlers.add(handler);
+	}
+	
+	public void dispatchEvent(final String eventName, final String eventMessage) {
+		if (null!=eventHandlers.get(eventName)) {
+			Vector<Consumer<String>> handlers = eventHandlers.get(eventName);
+			handlers.forEach((consumerMethod) -> {
+				consumerMethod.accept(eventMessage);
+			});
+		}		
+	}
+
+}

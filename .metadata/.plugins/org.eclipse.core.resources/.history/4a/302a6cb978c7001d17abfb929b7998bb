@@ -1,0 +1,61 @@
+package graphicsView.render;
+
+import java.util.logging.Logger;
+
+import color.AsciiColorUtil;
+import graphics.TwoColorImage;
+
+public class RenderPartialFrame implements Runnable {
+	private static Logger logger = Logger.getLogger(RenderPartialFrame.class.getName());
+	int xOffset;
+	int renderWidth;
+	int renderHeight;
+	private boolean rendered=false;
+	public boolean isRendered() {
+		return rendered;
+	}
+
+	private TwoColorImage twoColorImage;
+
+	public TwoColorImage getTwoColorImage() {
+		return twoColorImage;
+	}
+
+	final String name;
+	
+	public RenderPartialFrame(String name, int renderWidth, int renderHeight)
+    {
+		this.name = name;
+		this.renderWidth = renderWidth;
+		this.renderHeight = renderHeight;
+		twoColorImage = new TwoColorImage(renderWidth,renderHeight);
+	}
+	
+	public int getxOffset() {
+		return xOffset;
+	}
+
+	public void setxOffset(int xOffset) {
+		this.xOffset = xOffset;
+	}
+
+	@Override
+	public void run() {
+		renderFrame();
+	}
+	
+	private boolean loggingEnabled = false;
+	
+	private void log(String message) {
+		if (loggingEnabled) {
+			logger.info(AsciiColorUtil.BLUE+name+" - "+message+AsciiColorUtil.DEFAULT);
+		}
+	}
+	
+	public void renderFrame() {						
+		twoColorImage.drawLine(0, 0, renderWidth-10, renderHeight-10);
+		twoColorImage.drawLine(renderWidth-10, renderHeight-10, 0, 0);		
+
+		rendered=true;
+	}
+}

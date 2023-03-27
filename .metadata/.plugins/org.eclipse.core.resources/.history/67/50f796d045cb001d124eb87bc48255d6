@@ -1,0 +1,192 @@
+package application.controller;
+
+import compression.CompressionUtilTest;
+import graphicsView.components.ViewComponentUtil;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.scene.control.Alert;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import math.AdditionUtilTest;
+import math.LazyLoadedMathUtil;
+import multithreading.ThreadUtil;
+import performance.PerformanceUtil;
+import process.ThreadOrderProcessUtil;
+import random.RandomUtilTest;
+import testing.TestResult;
+
+import java.lang.reflect.Array;
+import java.nio.file.Path;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.logging.Logger;
+import java.util.regex.MatchResult;
+import java.util.regex.Pattern;
+
+public class RunTestsCommand implements Runnable {
+    private Logger logger = Logger.getLogger(RunTestsCommand.class.getName());
+
+    public ArrayList<TestResult> getTestResults() {
+        return testResults;
+    }
+
+    private ArrayList<TestResult> testResults = new ArrayList<>();
+
+    @Override
+    public void run() {
+        TestResult testResult = null;
+
+        AdditionUtilTest additionUtilTest = new AdditionUtilTest();
+        testResult = additionUtilTest.testSumListOfIntegers();
+        testResults.add(testResult);
+
+        testResult = null;
+        CompressionUtilTest compressionUtilTest = new CompressionUtilTest();
+        testResult = compressionUtilTest.testZipUnzipString();
+        testResults.add(testResult);
+        RandomUtilTest randomUtilTest = new RandomUtilTest();
+
+        testResult = null;
+        testResult = randomUtilTest.testGetRandomElementInListOfStrings();
+        testResults.add(testResult);
+
+        testResult = null;
+        testResult = randomUtilTest.testGetRandomList();
+        testResults.add(testResult);
+
+        testResult = null;
+        testResult = randomUtilTest.testGetRandomNumber();
+        testResults.add(testResult);
+
+        if (testResults.size()>0) {
+            ViewComponentUtil.infoAlert("Test Coverage", "Test Coverage > 0%", "Small Changes Do Add Up, Never Say Die!");
+        }
+
+        logger.info(testResults.toString());
+
+        String testString = "So if you have a paragraph like this.  Then state sally sells seashells.  Potentially at the sea shore. This is a test sentence that promotes unit test testing where the word test is used in more than one test.";
+
+        System.out.println("Test String: "+testString);
+
+        char letter1 = 'c';
+        System.out.println('c');
+        System.out.println("letter1++"+letter1++);
+        System.out.println("++letter1"+(++letter1));
+
+        HashMap<String,List<String>> lettersWords = new HashMap<>();
+
+        for (char letter='a'; letter<='z'; letter++) {
+            char upperCase = Character.toUpperCase(letter);
+            String pattern = "["+upperCase+letter+"].*";
+            String upperAndLower = ""+upperCase+letter;
+            List<String> sWords = List.of(testString.split("\\."))
+                    .stream().flatMap((element) -> {
+                        String words[] = element.split(" ");
+                        List<String> sWordsInSentence = List.of(words)
+                                .stream().filter((word) -> word.matches(pattern)).toList();
+                        return sWordsInSentence.stream();
+                    }).toList();
+            if (sWords.size()>0) {
+                lettersWords.put(upperAndLower, sWords);
+            }
+        }
+
+        HashMap<String,Integer> wordCount = new HashMap<>();
+
+        lettersWords.forEach((key,elements) -> {
+            elements.forEach((element) -> {
+                int frequency = Collections.frequency(elements,element);
+                wordCount.put(element,frequency);
+            });
+        });
+
+        wordCount.forEach((key,count) -> {
+            System.out.println(key+" - "+count);
+        });
+
+        double twoPi=Math.PI*2;
+        HashMap<String,Double> sineMap = new HashMap<>();
+        HashMap<String,Double> cosineMap = new HashMap<>();
+        HashMap<String,Double> tanMap = new HashMap<>();
+        for (double r=0.0; r<twoPi; r+=0.01) {
+            DecimalFormat decimalFormat = new DecimalFormat();
+            String valueAsTwoDigitString = String.format("%.2f",r);
+            sineMap.put(valueAsTwoDigitString, Math.sin(r));
+            cosineMap.put(valueAsTwoDigitString, Math.cos(r));
+            tanMap.put(valueAsTwoDigitString, Math.tan(r));
+        }
+
+        System.out.println("Sine of 3.14 from map: "+sineMap.get("3.14"));
+        System.out.println("Computed sine: "+Math.sin(3.14)+'\n');
+
+        System.out.println("Cosine of 3.14 from map: "+cosineMap.get("3.14"));
+        System.out.println("Computed cosine: "+Math.cos(3.14)+'\n');
+
+        System.out.println("Tan of 3.14 from map: "+tanMap.get("3.14"));
+        System.out.println("Computed Tan of 3.14: "+Math.tan(3.14)+'\n');
+
+        double value;
+        double computedValue;
+        PerformanceUtil.getInstance().startInstant();
+        computedValue = sineMap.get("3.14");
+        double inLoopValue;
+        for (int i=0; i<1_000_000; i++) {
+            inLoopValue = computedValue;
+            inLoopValue += i;
+        }
+        PerformanceUtil.getInstance().stopInstant();
+
+        long time1Milliseconds = PerformanceUtil.getInstance().getInstantDifferenceMilliseconds();
+
+        PerformanceUtil.getInstance().startInstant();
+        for (int i=0; i<1_000_000; i++) {
+            computedValue = Math.sin(3.14);
+            computedValue += i;
+        }
+        PerformanceUtil.getInstance().stopInstant();
+
+        long time2Milliseconds = PerformanceUtil.getInstance().getInstantDifferenceMilliseconds();
+
+        ThreadUtil.addTask( () -> {
+                    Runnable method = () -> {
+                        double computedThreadValue;
+
+                        for (int i = 0; i < 250_000_000; i++) {
+                            computedThreadValue = LazyLoadedMathUtil.sine(3.14);
+                            if (i % 10_000_000 == 0) {
+                                System.out.println("Computed iterations: " + i);
+                            }
+                            computedThreadValue += i;
+                        }
+
+                    };
+
+                    ArrayList<Runnable> parallelTasks = new ArrayList<>(List.of(method, method, method, method));
+
+                    PerformanceUtil.getInstance().startInstant();
+                    ThreadOrderProcessUtil.runParallelProcess("Lazy Loaded Math Calls", parallelTasks, true);
+                    PerformanceUtil.getInstance().stopInstant();
+                    long time3Milliseconds = PerformanceUtil.getInstance().getInstantDifferenceMilliseconds();
+
+                    System.out.println("Sine from LazyLoadedMathUtil for 4*250 million calls: " + time3Milliseconds + " ms");
+                });
+
+        PerformanceUtil.getInstance().startInstant();
+        computedValue = LazyLoadedMathUtil.sine(3.14);
+        for (int i=0; i<1_000_000; i++) {
+            inLoopValue = computedValue;
+            inLoopValue += i;
+        }
+        PerformanceUtil.getInstance().stopInstant();
+
+        long time4Milliseconds = PerformanceUtil.getInstance().getInstantDifferenceMilliseconds();
+
+        System.out.println("Sine from HashMap for 1 million calls: "+time1Milliseconds+" ms");
+        System.out.println("Sine computed for 1 million calls: "+time2Milliseconds+" ms");
+        System.out.println("Sine from LazyLoadedMathUtil for 1 million calls loaded outside of loop: "+time4Milliseconds+" ms");
+    }
+}

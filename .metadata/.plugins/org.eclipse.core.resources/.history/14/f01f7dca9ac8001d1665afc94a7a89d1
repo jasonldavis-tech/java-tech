@@ -1,0 +1,133 @@
+package graphicsView.render;
+
+import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.logging.Logger;
+
+import color.AsciiColorUtil;
+import commonModel.RenderEngineModel;
+import graphics.TwoColorImage;
+import graphics.TwoColorImageUtil;
+import graphicsView.components.DrawBackgroundImage;
+import javafx.scene.image.WritableImage;
+import multithreading.ThreadUtil;
+import performance.PerformanceUtil;
+
+public class MultithreadRender implements Runnable {
+	private static Logger logger = Logger.getLogger(MultithreadRender.class.getName());
+	private boolean rendered=false;
+	private BufferedImage renderedImage;
+	private RenderEngineModel model;
+	int renderWidth;
+	int renderHeight;
+	int sections = 10;
+	
+	public MultithreadRender(final RenderEngineModel model, int renderWidth, int renderHeight) {
+		this.model=model;
+		this.renderWidth = renderWidth;
+		this.renderHeight = renderHeight;
+	}
+	
+	public BufferedImage getRenderedImage() {
+		return renderedImage;
+	}
+
+	public boolean isRendered() {
+		return rendered;
+	}	
+
+	private void updateBackground() {
+		log("Generating background image");
+		model.setBackgroundBufferedImage(new DrawBackgroundImage(renderWidth, renderHeight).drawBackgroundImage());
+		model.setBackgroundChanged(false);
+		log("Created background image");
+	}
+	
+	private void renderSectionsAndBlockUntilComplete() {
+		PerformanceUtil perfUtilForkJoin = new PerformanceUtil();
+		perfUtilForkJoin.startInstant();
+		for (int i=0; i<sections; i++) {
+			String sectionName = "section"+i;
+			Integer sectionIndex=i;
+			RenderPartialFrame renderPartialFrame = new RenderPartialFrame(sectionName,renderWidthPerThread,renderHeight);
+			renderPartialFrame.setxOffset(i*renderWidthPerThread);
+			ThreadUtil.addTask(() -> {
+				renderPartialFrame.renderFrame();
+				renders.put(sectionIndex,renderPartialFrame.getTwoColorImage());
+			});
+		}
+		
+		boolean sleepEnabled=false;
+		while (renders.size()!=sections) {
+			if (sleepEnabled) {
+				 try {
+					Thread.sleep(5);
+				} catch (InterruptedException e) {
+					
+				} 
+			}
+		}
+		perfUtilForkJoin.stopInstant();
+		// log("Time required for forking and joining the results of the threads: "+perfUtilForkJoin.getInstantDifferenceMilliseconds()+" ms");
+	}
+	
+	int renderWidthPerThread;
+	int timeRequiredToCreateRasters=0;
+	ConcurrentHashMap<Integer, TwoColorImage> renders = new ConcurrentHashMap<>();
+	BufferedImage bufferedImage;						
+	Graphics2D g2D;
+	WritableImage image;
+	
+	public void setupGraphics() {
+		PerformanceUtil rasterCreationPerfUtl = new PerformanceUtil();
+		rasterCreationPerfUtl.startInstant();
+		bufferedImage = new BufferedImage(renderWidth, renderHeight, BufferedImage.TYPE_INT_RGB);						
+		g2D = bufferedImage.createGraphics();
+	    rasterCreationPerfUtl.stopInstant();
+	    timeRequiredToCreateRasters+=rasterCreationPerfUtl.getInstantDifferenceMilliseconds();		
+	}
+	
+	@Override
+	public void run() {
+		PerformanceUtil totalRuntime = new PerformanceUtil();
+		totalRuntime.startInstant();
+		
+		if (model.isBackgroundChanged()) {
+			updateBackground();
+		}				
+				
+		renderWidthPerThread = renderWidth/sections;					    
+	    this.renderSectionsAndBlockUntilComplete();
+		
+	    setupGraphics();
+		
+
+		PerformanceUtil perfUtil = new PerformanceUtil();
+		perfUtil.startInstant();
+	    // TODO: Combine sections of image into one image
+		for (int j=0; j<sections; j++) {
+			// BufferedImage bufferedImage = new BufferedImage(model.getBackgroundBufferedImage().getColorModel(), writableRaster, false, new Hashtable<>());
+			TwoColorImage sectionRaster = renders.get(j);
+			TwoColorImageUtil.renderToGraphics2DTransparentWithXOffset(sectionRaster, g2D, j*renderWidthPerThread);
+		}
+		
+		perfUtil.stopInstant();
+		// log("Time required to render all sectional Two Color Image to Graphics2D: "+perfUtil.getInstantDifferenceMilliseconds()+" ms");		
+		
+		model.setBufferedImage(bufferedImage);
+	
+		rendered=true;
+		totalRuntime.stopInstant();
+		// log("Time required to create rasters: "+timeRequiredToCreateRasters+" ms");
+		// log("Time required to multithread render: "+totalRuntime.getInstantDifferenceMilliseconds()+" ms");
+	}
+	
+	private boolean loggingEnabled = true;
+	
+	private void log(String message) {
+		if (loggingEnabled) {
+			logger.info(AsciiColorUtil.GREEN+message+AsciiColorUtil.DEFAULT);
+		}
+	}
+}

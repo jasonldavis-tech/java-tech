@@ -1,0 +1,148 @@
+package graphicsView.components;
+
+import java.awt.Color;
+import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.logging.Logger;
+
+import commonModel.RenderEngineModel;
+import javafx.embed.swing.SwingFXUtils;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.image.WritableImage;
+import multithreading.ThreadUtil;
+import performance.PerformanceReading;
+import performance.PerformanceUtil;
+import performance.TimeMeasurementUtil;
+
+public class StreamImageView {
+	private static Logger logger = Logger.getLogger(StreamImageView.class.getName());
+	private static AtomicInteger instanceIdGenerator = new AtomicInteger();
+	private PerformanceUtil performanceUtil = new PerformanceUtil();
+	private int sleepTimeMilliseconds;
+
+	private int timeSinceLastPerformanceReading=0;
+	
+	private BlockingQueue<Image> imageQueue = new ArrayBlockingQueue<>(1000);
+	
+	public BlockingQueue<Image> getImageQueue() {
+		return imageQueue;
+	}
+
+	private ImageView imageView;
+		
+	public ImageView getImageView() {
+		return imageView;
+	}
+	
+	private String id;	
+
+	public String getId() {
+		return id;
+	}
+	
+	public StreamImageView() {
+		this(null,30);
+	}
+	
+	int renderWidth;
+	int renderHeight;
+
+	public StreamImageView(Image initialFrame, int sleepTimeMilliseconds, int renderWidth, int renderHeight) {
+		this.renderWidth=renderWidth;
+		this.renderHeight=renderHeight;
+		
+		id="streamImageView-"+instanceIdGenerator.getAndIncrement();
+		this.sleepTimeMilliseconds = sleepTimeMilliseconds;
+		
+		if (null == initialFrame) {
+			setupInitialFrame(initialFrame);
+		}
+		
+	    imageView = new ImageView(initialFrame);
+	    setupProcessingTask();
+	}
+	
+	private void setupInitialFrame(Image initialFrame) {
+		BufferedImage bufferedImage = new BufferedImage(renderWidth, renderHeight, BufferedImage.TYPE_INT_RGB);
+		Graphics2D g2D = bufferedImage.createGraphics();
+		
+		g2D.setColor(Color.WHITE);
+		g2D.fillRect(0, 0, renderWidth, renderHeight);
+		
+		WritableImage writableImage = new WritableImage(renderWidth,renderHeight);
+		SwingFXUtils.toFXImage(bufferedImage, writableImage);
+		initialFrame = writableImage;
+	}
+	
+	public int getSleepTimeMilliseconds() {
+		return sleepTimeMilliseconds;
+	}
+
+	public void setSleepTimeMilliseconds(int sleepTimeMilliseconds) {
+		this.sleepTimeMilliseconds = sleepTimeMilliseconds;
+	}
+	
+	public void setupProcessingTask() {
+		Thread imageViewUpdateConsumer = new Thread(this::updateImageView);
+		ThreadUtil.addTask(imageViewUpdateConsumer);		
+	}
+	
+	public void updateImageView() {		
+		
+		
+		while (true) {			
+			performanceUtil.start();
+			try {
+				Image image = imageQueue.poll(100, TimeUnit.MILLISECONDS);
+				
+				if (null != image) {
+					imageView.setImage(image);
+				}
+				
+				performanceUtil.stop();
+				performanceUtil.addPerformanceReading("Update to ImageView");				
+			} catch(InterruptedException e) { 
+				// Shutdown Now will interrupt threads, thus return on Interrupt
+				// stops the thread
+				if (RenderEngineModel.isExitState()) {
+					logger.info("Closing StreamImageView Component: "+this.getId());
+					return;
+				} else {
+					logger.info("Thread Sleep Interrupted: "+e.getMessage());
+				} 
+			}
+			if (timeSinceLastPerformanceReading>10000) {
+				// this.logPerformance();
+			} else {
+				timeSinceLastPerformanceReading+=sleepTimeMilliseconds;
+			}
+		}
+	}
+	
+	private void logPerformance() {
+		timeSinceLastPerformanceReading=0;
+		PerformanceReading reading = performanceUtil.summarizePerformanceReadings(
+				"Update to ImageView Time Average",
+				performanceUtil.getPerformanceReadings());
+		logger.info("Update to ImageView time average nanoseconds: "+reading.getNanoseconds());
+		if (reading.getNanoseconds()>=1000000) {
+			long milliseconds = TimeMeasurementUtil.convertNanosecondsToMilliseconds(
+					reading.getNanoseconds());
+			logger.info("Update to ImageView time average milliseconds: "+milliseconds);
+		}
+		
+		// if Image Queue size is greater than zero, production of images by Render Engine
+	    // might be greater than displays to screen via ImageView thus resulting in a lag
+		// to input perceived.  Constantly processed swiftly factors into future ability to
+		// process and display swiftly.
+		if (imageQueue.size()>0) {
+			logger.info("Number of images in imageQueue: "+imageQueue.size());
+		}
+	}
+}

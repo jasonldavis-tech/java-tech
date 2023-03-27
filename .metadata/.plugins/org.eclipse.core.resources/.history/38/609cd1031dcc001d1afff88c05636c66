@@ -1,0 +1,34 @@
+package data;
+
+import testing.TestCase;
+import testing.TestResult;
+
+public class InputValidationUtilTest extends TestCase {
+	public InputValidationUtilTest() {
+		super(InputValidationUtilTest.class.getName());
+	}
+
+	public TestResult testFlagPotentialMismatches() {
+		TestResult testResult = new TestResult("testFlagPotentialMismatches");
+		String input =  "the money or other benefits lost whn pusuing a particular couse of action instead of a mutually-exclusive alternative";
+		String correct = "the money or other benefits lost when pursuing a particular course of action instead of a mutually-exclusive alternative";		
+		
+		String mismatch = InputValidationUtil.flagPotentialMismatches(correct, input);
+		
+		if (mismatch.compareTo("when")==0) {
+			logger.info("Word matches expected value");
+			testResult.setTestSuccessful(true);
+		} else {
+			logger.info("Mismatch gives: "+mismatch+" instead of expected 'when'");
+			testResult.setTestSuccessful(false);
+		}
+		
+		return testResult;
+	}
+
+	public static void main(String args[]) {
+		InputValidationUtilTest test = new InputValidationUtilTest();
+		TestResult result = test.testFlagPotentialMismatches();
+		logger.info("Result successful? "+result.getTestSuccessful());
+	}
+}

@@ -1,0 +1,95 @@
+package random;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.logging.Logger;
+
+import testing.TestCase;
+import testing.TestResult;
+
+public class RandomUtilTest extends TestCase {
+	public RandomUtilTest() {
+		super(RandomUtilTest.class.getName());
+	}
+	
+	public TestResult testGetRandomList() {
+		TestResult testResult = new TestResult("testGetRandomList");
+		testResult.startTest();
+		
+		testResult.stopTest();
+		return testResult;
+	}
+	
+	public TestResult testGetRandomElementInListOfStrings() {
+		TestResult testResult = new TestResult("testGetRandomElementInListOfStrings");
+		testResult.startTest();
+		
+		String choiceSet[] = {
+			"Red",
+			"Blue",
+			"Green",
+			"Orange",
+			"Purple",			
+			"Cyan",
+			"Pink"
+		};
+		
+		List<String> listOfStrings = Arrays.asList(choiceSet);
+		
+		// Produce 100 result choices and confirm
+		//    1. they are all in the list
+		//    2. they are not all matching (low probability)
+		String result = null;
+		String lastResult = null;
+		boolean resultIsChanging=false;
+		boolean isInList=false;
+		
+		for (int i=0; i<100; i++) {
+			if (null!=result) {
+				lastResult = result;
+			}
+			result = RandomUtil.getRandomElementInListOfStrings(new ArrayList<>(listOfStrings));
+			if (result!=lastResult) {
+				resultIsChanging = true;
+			}
+			final String resultToMatch = result;
+			if (listOfStrings.stream().anyMatch(element -> element.compareTo(resultToMatch)==0)) { 
+				isInList=true;
+			} else {
+				isInList=false;
+				break;
+			}
+		}
+		
+		if (resultIsChanging&&isInList) {
+			testResult.setTestSuccessful(true);
+			logSuccess();
+			
+		} else {
+			testResult.setTestSuccessful(false);
+			logFailure();
+		}
+		
+		testResult.stopTest();
+		
+		return testResult;	
+	}
+	
+	public TestResult testGetRandomNumber() {
+		TestResult testResult = new TestResult("testGetRandomNumber");
+		testResult.startTest();
+		
+		int lowerBound=0;
+		int upperBound=0;
+		
+		testResult.stopTest();
+		return testResult;
+	}
+	
+	public static void main(String args[]) {
+		RandomUtilTest randomUtilTest = new RandomUtilTest();
+		TestResult result = randomUtilTest.testGetRandomList();		
+	}
+	
+}

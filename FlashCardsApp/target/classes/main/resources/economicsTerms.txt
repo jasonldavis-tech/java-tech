@@ -1,0 +1,41 @@
+Interest - a sum paid or charged for the use of money or for borrowing money
+Gross Domestic Product - gross national product excluding payments on foreign investments.
+Liquidity - the ability or ease with which assets can be converted into cash
+Relevance - the condition of being relevant, or connected with the matter at hand
+Free Java App - Cross training typing and definitions with an emphasis on Throughput
+Most Common Words in English - the be to of and, a in that have I, it for not on with, he as you do at
+Throughput - actual transfer of data that can be up to bandwidth but is not usually to the level of bandwidth
+Bandwidth - maximum possible transfer of data
+Focus - a central point, as of attraction, attention, or activity
+Concise Communication - communication that is concise
+Active Listening - listening to speaker in a focused attentive way
+Linguistics - the science of language, including phonetics, phonology, morphology, syntax, semantics, pragmatics, and historical linguistics.
+Maximize Profit - maximize profit
+Pecuinary - adjective, of or relating to money
+Investment - the investing of money or capital in order to gain profitable returns, as interest, income, or appreciation in value.
+Free Market - an economic system in which prices and wages are determined by unrestricted competition between businesses, without government regulation or fear of monopolies.
+Opportunity Cost - the money or other benefits lost when pursuing a particular course of action instead of a mutually-exclusive alternative
+Equity - ownership, especially when considered as the right to share in future profits or appreciation in value.
+Commodity - an article of trade or commerce, especially a product as distinguished from a service.
+Assets - items or resources owned by a person, business, or government, as cash, notes and accounts receivable, securities, inventories, goodwill, fixtures, machinery, or real estate (opposed to liabilities)
+Phonetics - the science or study of speech sounds and their production, transmission, and reception, and their analysis, classification, and transcription.  Compare acoustic phonetics, articulatory phonetics, auditory phonetics, physiological phonetics.
+Semantics - the study of meaning, the study of linguistic development by classifying and examining changes in meaning and form.
+Syntax - the study of the rules for the formation of grammatical sentences in a language.
+Morphology - the patterns of word formation in a particular language, including inflection, derivation, and composition. 
+Phonology - the study of the distribution and patterning of speech sounds in a language and of the tacit rules governing pronunciation.
+Pragmatics - the analysis of language in terms of the situational context within which utterances are made, including the knowledge and beliefs of the speaker and the relation between speaker and listener.
+Accuracy - how close you get to the true, exact value. Hitting the Bull's-eye on a target is accurate.
+Precision - consistent, repeatable results that factor into to ability to increase accuracy.  Hitting same spot on target on repeated attempts is precise.
+Velocity - the time rate of change of position of a body in a specified direction.
+Watt - the standard unit of power in the International System of Units (SI), equivalent to one joule per second and equal to the power in a circuit in which a current of one ampere flows across a potential difference of one volt. Abbreviation: W, w.
+Joule - the standard unit of work or energy in the International System of Units (SI), equal to the work done by a force of one newton when its point of application moves through a distance of one meter in the direction of the force: equivalent to 107 ergs and one watt-second. Abbreviations: J, j
+Efficiency - the ratio of the work done or energy developed by a machine, engine, etc., to the energy supplied to it, usually expressed as a percentage.
+Volt - the standard unit of potential difference and electromotive force in the International System of Units (SI), formally defined to be the difference of electric potential between two points of a conductor carrying a constant current of one ampere, when the power dissipated between these points is equal to one watt. Abbreviation: V
+Ampere - the basic unit of electrical current in the International System of Units (SI), equivalent to one coulomb per second, formally defined to be the constant current which if maintained in two straight parallel conductors of infinite length, of negligible circular cross section, and placed one meter apart in vacuum, would produce between these conductors a force equal to 2x10^-7 newton per meter of length. Abbreviation: A, amp.
+Farad - the standard unit of capacitance in the International System of Units (SI), formally defined to be the capacitance of a capacitor between the plates of which there appears a potential difference of one volt when it is charged by a quantity of electricity equal to one coulomb. Symbol: F
+Induction - Electricity, Magnetism. the process by which a body having electric or magnetic properties produces magnetism, an electric charge, or an electromotive force in a neighboring body without contact.  Compare electromagnetic induction, electrostatic induction.
+Magnet - a body, as a piece of iron or steel, that possesses the property of attracting certain substances, as iron.
+Magnetism - the properties of attraction possessed by magnets; the molecular properties common to magnets.
+Acceleration - the act of accelerating; increase of speed or velocity.  Mechanics. the time rate of change of velocity with respect to magnitude or direction; the derivative of velocity with respect to time.
+Gravity - the force of attraction by which terrestrial bodies tend to fall toward the center of the earth. a unit of acceleration equal to the acceleration of gravity. Symbol: g
+Activation Energy - the least amount of energy required to activate atoms or molecules to a state in which they can undergo a chemical reaction.

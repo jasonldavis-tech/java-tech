@@ -1,0 +1,22 @@
+	public void renderFrame() {						
+		for (int i=0; i<4; i++) {
+			int yOffset=100*i;
+			twoColorImage.drawRectangeCoordinates(25, 25+yOffset, 75, 75+yOffset);
+			twoColorImage.drawRectangeCoordinates(35, 35+yOffset, 85, 85+yOffset);
+			
+			twoColorImage.drawLine(0, 0+yOffset, 49, 49+yOffset);		
+			twoColorImage.drawLine(0, 0+yOffset, 49, 20+yOffset);
+			twoColorImage.drawLine(0, 0+yOffset, 49, 10+yOffset);
+			twoColorImage.drawLine(0, 0+yOffset, 49, 5+yOffset);
+			twoColorImage.drawRectangeCoordinates(15, 5+yOffset, 33, 22+yOffset);
+			twoColorImage.drawRectangeCoordinates(20, 10+yOffset, 40, 30+yOffset);
+
+			
+			twoColorImage.drawLine(15, 5+yOffset, 20, 10+yOffset); // LisV
+			twoColorImage.drawLine(33, 5+yOffset, 40, 10+yOffset);		
+			
+			twoColorImage.drawLine(33, 22+yOffset, 40, 30+yOffset);
+			twoColorImage.drawLine(15, 22+yOffset, 20, 30+yOffset);			
+		}
+		rendered=true;
+	}

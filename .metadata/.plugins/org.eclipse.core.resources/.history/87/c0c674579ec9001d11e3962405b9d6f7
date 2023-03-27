@@ -1,0 +1,173 @@
+package random;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Vector;
+
+import data.VectorMatrix;
+import testing.TestCase;
+import testing.TestResult;
+
+public class RandomUtilTest extends TestCase {
+	public RandomUtilTest() {
+		super(RandomUtilTest.class.getName());
+	}
+	
+	public TestResult testGetRandomList() {
+		TestResult testResult = new TestResult("testGetRandomList");
+		testResult.startTest();
+		
+		String choiceSet[] = {
+				"Red",
+				"Blue",
+				"Green",
+				"Orange",
+				"Purple",			
+				"Cyan",
+				"Pink"
+			};
+			
+		List<String> listOfStrings = Arrays.asList(choiceSet);
+		
+		// Purpose of method is to generate a shuffled list of up to n elements chosen from list that is provided
+		// To test:
+		// 1. Verify the list is of n size
+		// 2. Verify the order is not always the same
+		
+		boolean isCorrectSize=false;
+		
+		// 1
+		int size = 20;
+		List<String> randomizedList = RandomUtil.getRandomList(new ArrayList<>(listOfStrings), size);
+		
+		if (size == randomizedList.size()) {
+			isCorrectSize = true;
+		} else {
+			isCorrectSize = false;
+		}
+		
+		// 2
+		// generate 10 lists and verify order doesn't match
+		
+		VectorMatrix<String> resultsMatrix = new VectorMatrix<String>(10, 20, "");
+		for (int i=0; i<10; i++) {
+			randomizedList = RandomUtil.getRandomList(new ArrayList<>(listOfStrings), size);
+			
+			// Copy results elements to a matrix
+			for (int j=0; j<20; j++) {
+				resultsMatrix.setElement(i, j, randomizedList.get(j));
+			}
+		}
+		
+		testResult.stopTest();
+		return testResult;
+	}
+	
+	public TestResult testGetRandomElementInListOfStrings() {
+		TestResult testResult = new TestResult("testGetRandomElementInListOfStrings");
+		testResult.startTest();
+		
+		String choiceSet[] = {
+			"Red",
+			"Blue",
+			"Green",
+			"Orange",
+			"Purple",			
+			"Cyan",
+			"Pink"
+		};
+		
+		List<String> listOfStrings = Arrays.asList(choiceSet);
+		
+		// Produce 100 result choices and confirm
+		//    1. they are all in the list
+		//    2. they are not all matching (low probability)
+		String result = null;
+		String lastResult = null;
+		boolean resultIsChanging=false;
+		boolean isInList=false;
+		
+		for (int i=0; i<100; i++) {
+			if (null!=result) {
+				lastResult = result;
+			}
+			result = RandomUtil.getRandomElementInListOfStrings(new ArrayList<>(listOfStrings));
+			if (result!=lastResult) {
+				resultIsChanging = true;
+			}
+			final String resultToMatch = result;
+			if (listOfStrings.stream().anyMatch(element -> element.compareTo(resultToMatch)==0)) { 
+				isInList=true;
+			} else {
+				isInList=false;
+				break;
+			}
+		}
+		
+		if (resultIsChanging&&isInList) {
+			testResult.setTestSuccessful(true);
+			logSuccess(testResult.getTestName()+" completed successfully");			
+		} else {
+			testResult.setTestSuccessful(false);
+			if (!resultIsChanging) {
+				logFailure("Result is not changing");
+			}
+			if (isInList) {
+				logFailure("Providing elements that are not in the list");
+			}
+		}
+		
+		testResult.stopTest();
+		
+		return testResult;	
+	}
+	
+	public TestResult testGetRandomNumber() {
+		TestResult testResult = new TestResult("testGetRandomNumber");
+		testResult.startTest();
+		
+		boolean isChanging=false;
+		boolean isInRange=true;
+		int result;
+		int lastResult=-1;
+		
+		int lowerBound = 0;
+		int upperBound = 10;
+		
+		for (int i=0; i<100; i++) {			
+			result = RandomUtil.getRandomNumber(lowerBound, upperBound);
+			if (result<lowerBound && result>=upperBound) {
+				isInRange=false;
+			}
+			
+			if (result!=lastResult) {
+				isChanging=true;
+				lastResult=result;
+			}			
+		}
+		
+		if (isChanging&&isInRange) {
+			testResult.setTestSuccessful(true);
+			logSuccess(testResult.getTestName()+" completed successfully");
+		} else {
+			testResult.setTestSuccessful(false);
+			if (!isChanging) {
+				logFailure("Result is not changing");
+			}
+			if (!isInRange) {
+				logFailure("Result is giving values outside of range");
+			}			
+		}
+		
+		testResult.stopTest();
+		return testResult;
+	}
+	
+	public static void main(String args[]) {
+		RandomUtilTest randomUtilTest = new RandomUtilTest();
+		TestResult result1 = randomUtilTest.testGetRandomElementInListOfStrings();	
+		TestResult result2 = randomUtilTest.testGetRandomNumber();
+	}
+	
+}

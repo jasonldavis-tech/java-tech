@@ -1,0 +1,134 @@
+package graphics;
+
+import data.BooleanMatrix;
+
+public class TwoColorImage {
+	BooleanMatrix pixels;
+	
+	public int getWidth() {
+		return pixels.getWidth();
+	}
+	
+	public int getHeight() {
+		return pixels.getHeight();
+	}
+
+	public TwoColorImage(int width, int height) {
+		pixels = new BooleanMatrix(width, height, false);
+	}
+	
+	public TwoColorImage(BooleanMatrix pixels) {
+		this.pixels = pixels;
+	}
+	
+	public BooleanMatrix getPixels() {
+		return pixels;
+	}
+	
+	public void turnPixelOn(int x, int y) {
+		if (x<pixels.getWidth() && y<pixels.getHeight()) {
+			pixels.setElement(x, y, true);
+		}
+	}
+	
+	public void turnPixelOff(int x, int y) {
+		if (x<pixels.getWidth() && y<pixels.getHeight()) {
+			pixels.setElement(x, y, false);
+		}
+	}
+	
+	public void drawLine(int x1, int y1, int x2, int y2) {
+		int yDifference = y2-y1;
+		int xDifference = x2-x1;
+		
+		if (xDifference<0) {
+			// Switch points, draw left to right
+			int x1Temp=x1;
+			int x2Temp=x2;
+			int y1Temp=y1;
+			int y2Temp=y2;
+			
+			x1=x2Temp;
+			y1=y2Temp;
+			x2=x1Temp;
+			y2=y1Temp;
+			
+			xDifference = x2-x1;
+		}
+		
+		if (x2>getWidth()-1) {
+			x2=getWidth()-1;
+		}
+		
+		if (y2>getHeight()-1) {
+			y2=getHeight()-1;
+		}
+		
+		double riseOverRun = (double) yDifference/xDifference;
+		double b = y1-(riseOverRun*x1);
+		
+		turnPixelOn(x1, y1); // Draw start point
+		
+		if (y1==y2) {
+			for (int x=x1+1; x<x2-1; x++) {
+				turnPixelOn(x, y1);
+			}
+		} else if (x1==x2) {
+			for (int y=y1+1; y<y2-1; y++) {
+				turnPixelOn(x1, y);
+			}
+	    } else if (y1<y2){		
+			double computedY;
+			int integerY;
+			int usedXs=x1;
+			int usedYs=y1;
+			for (int x=x1; x<x2; x++) {
+				computedY = (riseOverRun*x)+b;
+				integerY = (int) computedY;
+				
+				if (computedY>usedYs && x>usedXs) {
+					turnPixelOn(x, integerY);
+					usedXs=x;
+					usedYs=integerY;
+				}					
+			}
+		} else if (y2<y1) {
+			double computedY;
+			int integerY;
+			int usedXs=x1;
+			int usedYs=y1;
+			for (int x=x1; x<x2; x++) {
+				computedY = (riseOverRun*x)+b;
+				computedY = Math.abs(computedY);
+				integerY = (int) computedY;
+				integerY = Math.abs(integerY);
+				
+				if (computedY<usedYs && x>usedXs) {
+					turnPixelOn(x, integerY);
+					usedXs=x;
+					usedYs=integerY;
+				}					
+			}			
+		}
+		
+		turnPixelOn(x2, y2); // Draw end point		
+	}
+	
+	public void drawRectangeCoordinates(int x1, int y1, int x2, int y2) {
+		for (int x=x1; x<=x2; x++) {
+			for (int y=y1; y<=y2; y++) {
+				if (x==x1 || x==x2 || y==y1 || y==y2) {
+					turnPixelOn(x, y);
+				}
+			}
+		}
+	}
+	
+	public void drawRectangeFilledCoordinates(int x1, int y1, int x2, int y2) {
+		for (int x=x1; x<=x2; x++) {
+			for (int y=y1; y<=y2; y++) {
+				turnPixelOn(x, y);
+			}
+		}
+	}
+}

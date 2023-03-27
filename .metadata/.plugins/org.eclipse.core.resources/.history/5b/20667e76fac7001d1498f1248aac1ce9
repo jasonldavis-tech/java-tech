@@ -1,0 +1,18 @@
+package application.controller;
+
+import javafx.scene.Scene;
+
+public class HandleResizeEvent implements Runnable {
+	private Scene scene;
+	
+	public HandleResizeEvent(Scene scene) {
+		this.scene = scene;
+	}
+
+	@Override
+	public void run() {
+		// TODO Auto-generated method stub
+
+	}
+
+}

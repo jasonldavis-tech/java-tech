@@ -1,0 +1,24 @@
+/* JavaFX CSS - Leave this comment until you have at least create one rule which uses -fx-Property */
+.mainElementCustomClass {
+	-fx-background-color: white;
+	-fx-padding: 30px, 30px, 30px, 30px;
+}
+.label {
+	-fx-font-size: 20;
+	-fx-text-fill: blue;
+}
+
+.customClass {
+	-fx-font-size: 30;
+	-fx-text-fill: cyan;
+}
+
+.labelGreen {
+	-fx-font-size: 20;
+	-fx-text-fill: #00FF00;
+}
+
+.textFlow {
+	-fx-font-size: 16;
+	-fx-text-fill: blue;
+}

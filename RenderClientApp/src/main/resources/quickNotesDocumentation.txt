@@ -1,0 +1,57 @@
+
+March 19th, 2023
+Convoluting code via comments is easy to do.  Simple more concise and straightforward easier to read
+and see flow of execution can go a long way versus big blocks of text that space things in ways that
+abstract all details to less visible.
+
+
+Purpose of RenderEngine
+-----------------------
+JavaFX does not generate ideal pipeline for rendering and buffering images by default. Or at least does not
+do so from what I can see or from what I can access under and oppressive system.
+
+Ability to swiftly verify performance factors into performance delivered, into performance maintained, or not
+delivered not maintained.  Performance and Throughput gets up sold to constant, in no need of maintenance.  Reduced
+corruption and oppression gets up sold to constant, in non need of maintenance.
+
+Ability to separate images rendered to their own processing buffer has potential to be powerful and useful for utilizing
+multiple computers for rendering.
+
+Plans to enable a UDP connection that allows swift display of images sent from a server.  TwoColor images are lighter weight
+thus I have been utilizing them as processing speed is less than ideal.  I have been trying to use Java LWGL yet it seems like
+I am being blocked from access to useful examples.
+
+Ability to swiftly get up and running with a useful usable app that is cross platform can be powerful.
+Java looking less like a second rate citizen has higher potential for long term throughput. Adobe Flash a powerful tool
+that got disabled in detrimental way that factors into development momentum.  Investing in technology is hip, new, latest
+trends many times and that can lead to less real value established, less long term value established.  Sounds new, cool,
+different factors into momentum for developers looking to stay inspired and be on the cutting edge of technology.
+
+Notes from RenderEngine.java
+----------------------------
+// Works like main loop on a Graphics Engine, continuously processes frames in pursuit of
+// High Throughput Performance on Frame Rate.  Modifying Time to sleep in milliseconds has
+// the potential to increase performance on some systems.
+
+// Prints performance every 30 frames
+// ideally should be hitting 500 FPS and actually delivering
+// 10 FPS gives feeling of less than ideal
+logFPS method
+
+// Applies a set of toggle enabled image filters to be applied to generated frame
+// Image in real time
+
+
+// Potential for Generating Frames faster than can be processed on some systems.
+// Logging performance useful for ability to comprehend bottlenecks on frame rates.
+// Changing values around sleep time in milliseconds on model has the potential
+// for increasing throughput on some systems.
+logPerformance method
+
+// Renders a new frame based upon a Cached Background Image stored in the Model
+performMultithread render method
+
+// Converts BufferedImage (Java AWT) to Image (JavaFX) and adds to concurrent queue
+// that will be picked up by StreamImageView component that utilizes ImageView
+// (Java FX)
+convertAndSend

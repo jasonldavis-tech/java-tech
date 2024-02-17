@@ -20,6 +20,7 @@ public class SupportMessageUtil {
 		}
 		
 		String arrayOfSupportMessageTypes[] = {
+		    "Protection from Antisemitism",
 			"Glass of Water",
 			"Water Bottles",
 			"Rescue Blankets",
@@ -79,7 +80,20 @@ public class SupportMessageUtil {
 			"Less Burning Buildings",
 			"Carbon Monoxide Detectors",
 			"Improved International Relations",
-			"Improved Magnify Studio"
+			"Improved Magnify Studio",
+			"Protection of the Elderly",
+			"Protection of Widows",
+			"Protection of Veterans",
+			"Protection of the Disabled",
+			"Protection of the Mentally Ill",
+			"Protection of the Oppressed",
+			"Protection of those unable to Protect Themselves",
+			"Protection of Children",
+			"Protection of those that have been silenced",
+			"Protection of those that have had their support robbed",
+			"Protection of those that have been devalued and dehumanized by society",
+			"Protection of the Persecuted",
+			"Improved Humanization"
 		};
 		
 		
@@ -97,7 +111,7 @@ public class SupportMessageUtil {
 		final StringWriter supportWriter = new StringWriter();
 		final StringWriter encouragementWriter = new StringWriter();
 		
-		for (int i=0; i<10; i++) {
+		for (int i=0; i<2; i++) {
 			
 			ArrayList<String> encouragementPhrases = RandomUtil.getRandomList(EncouragementUtil.getEncouragingPhrases(), 15);
 			final StringWriter encouragementParagraphWriter = new StringWriter();
@@ -119,14 +133,15 @@ public class SupportMessageUtil {
 		for (int i=0; i<10; i++) {
 			ArrayList<String> supportMessageList = RandomUtil.getRandomList(SupportMessageUtil.getSupportMessageTypes(), 25);
 
-			supportMessageWriter.append(ListToFormattedStringUtil.listToFormattedString(supportMessageList));
+			supportMessageWriter.append(ColorUtil.encloseStringInParagraphOfRandomColor(ListToFormattedStringUtil.listToFormattedString(supportMessageList)));
 			supportMessageWriter.append("\n\n");
 		}
 		
 		supportWriter.append(HtmlUtil.createHtmlParagraphsFromEndlines(supportMessageWriter.toString()));
 		
 		for (int i=0; i<10; i++) {
-			supportWriter.append(HumorUtil.ruleOfThreeGenerator());
+			supportWriter.append(ColorUtil.encloseStringInParagraphOfRandomColor(HumorUtil.ruleOfThreeGenerator()));
+			supportWriter.append("\n\n");
 		}
 		
 		final StringWriter criticalThoughtAmpWriter = new StringWriter();

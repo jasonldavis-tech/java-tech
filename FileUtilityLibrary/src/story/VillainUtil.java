@@ -22,7 +22,7 @@ public class VillainUtil {
 			"Ice Elemental", "Water Elemental", "Hurricane", "Tornado", "Earthquake",
 			"Forest Fire", "Tyrannical King", "Necromancer", "Poltergeist", "Witch",
 			"Warlock", "Cult Leader", "Psychopath", "Deranged Sniper", 
-			"Mislead Revolutionary", "Artificial Intelligence", "Big Brother System",
+			"Mislead Revolutionary", "Artificial Intelligence", "Surveillance State",
 			"Plague", "Famine", "Swarm", "Gas Leak", "Hostile Alien Spaceship",
 			"Gang", "Corrupt Politician", "Unstable Future Tech", "Riot", "Martial Law"
 		};

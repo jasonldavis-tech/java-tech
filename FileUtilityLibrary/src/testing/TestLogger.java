@@ -2,7 +2,7 @@ package testing;
 
 import java.util.logging.Logger;
 
-import color.AsciiColorUtil;
+import color.AnsiColorUtil;
 
 public class TestLogger {
 	private Logger logger;
@@ -20,11 +20,11 @@ public class TestLogger {
 	}	
 	
 	public void logSuccess() {
-		logInfo(AsciiColorUtil.GREEN+"Test completed successfully"+AsciiColorUtil.DEFAULT);
+		logInfo(AnsiColorUtil.GREEN+"Test completed successfully"+AnsiColorUtil.DEFAULT);
 	}
 	
 	public void logSuccess(String message) {
-		logInfo(AsciiColorUtil.GREEN+message+AsciiColorUtil.DEFAULT);
+		logInfo(AnsiColorUtil.GREEN+message+AnsiColorUtil.DEFAULT);
 	}
 	
 	public void info(String message) {
@@ -36,6 +36,6 @@ public class TestLogger {
 	}
 	
 	public void logFailure(String message) {
-		logSevere(AsciiColorUtil.RED+message+AsciiColorUtil.DEFAULT);
+		logSevere(AnsiColorUtil.RED+message+AnsiColorUtil.DEFAULT);
 	}
 }

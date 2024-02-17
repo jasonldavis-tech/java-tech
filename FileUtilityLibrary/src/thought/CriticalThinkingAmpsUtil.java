@@ -15,6 +15,9 @@ public class CriticalThinkingAmpsUtil {
 		}
 		
 		String arrayOfCriticalThinkingAmps[] = {
+			"Propaganda",
+			"Antisemitism",
+			"Narrative Control",
 			"Disaster Risk Reduction",
 			"Risk Mitigation Strategies",
 			"Power Efficiency",
@@ -149,7 +152,7 @@ public class CriticalThinkingAmpsUtil {
 			"Accessibility",
 			"Small Contributions Appreciated",
 			"Small Contributions Respected",
-			"Shear Stregth",
+			"Shear Strength",
 			"Compression",
 			"Compressive Forces",
 			"Acronyms",
@@ -168,7 +171,9 @@ public class CriticalThinkingAmpsUtil {
 			"Shape",
 			"Associations",
 			"Memory",
-			"Chain Thougts",
+			"Chain Thoughts",
+			"Supply Chain Management",
+			"Distribution Networks",
 			"Projections",
 			"Interpolation",
 			"Rounding",
@@ -249,13 +254,13 @@ public class CriticalThinkingAmpsUtil {
 			"Disease",
 			"Pestilence",
 			"Mosquitos",
-			"Sea Shells",
+			"Seashells",
 			"Mangos",
 			"Oranges",
 			"Apples",
 			"Pineapples",
-			"Cocunut",
-			"Cantelope",
+			"Coconut",
+			"Cantaloupe",
 			"Plumbs",
 			"Peaches",
 			"Chips",
@@ -296,16 +301,42 @@ public class CriticalThinkingAmpsUtil {
 			"Challenged in Positive Direction",
 			"Positive Momentum",
 			"Real Change",
-			"Initial Conditions"
+			"Initial Conditions",
+			"Lever",
+			"Gear",
+			"Simple Machines",
+			"Dyson Sphere",
+			"Megastructures",
+			"Terraforming",
+			"Space Travel"
 		};
 		
 		criticalThinkingAmps = new ArrayList<>(Arrays.asList(arrayOfCriticalThinkingAmps));
-		
 		return criticalThinkingAmps;
+	}
+	
+	public static String removeBadCombinationsFilter(String criticalThinkingAmps) {
+		ArrayList<String> combinationsFind = new ArrayList<>();
+		combinationsFind.add("Mangos, Combustion");
+		combinationsFind.add("Combustion, Mangos");
+		combinationsFind.add("Fire, Mangos");
+		combinationsFind.add("Mangos, Fire");
+		ArrayList<String> combinationsReplace = new ArrayList<>();
+		combinationsReplace.add("Mangos, Water, Combustion");
+		combinationsReplace.add("Combustion, Water, Mangos");
+		combinationsReplace.add("Fire, Water, Mangos");
+		combinationsReplace.add("Mangos, Water, Fire");
+		
+		for (int i=0; i<combinationsFind.size(); i++) {
+			criticalThinkingAmps = criticalThinkingAmps.replaceAll(combinationsFind.get(i), combinationsReplace.get(i));	
+		}
+		
+		return criticalThinkingAmps;		
 	}
 	
 	public static String getRandomCriticalThinkingAmp() {
 		String criticalThinkingAmp = RandomUtil.getRandomElementInListOfStrings(getCriticalThinkingAmps());
+		criticalThinkingAmp = removeBadCombinationsFilter(criticalThinkingAmp);
 		return criticalThinkingAmp;
 	}
 }

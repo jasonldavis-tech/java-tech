@@ -28,10 +28,12 @@ public class PerformanceUtil {
 	private Instant stop;
 	
 	public void startInstant() {
+		stopWatchStarted=true;
 		start = Instant.now();
 	}
 	
 	public void stopInstant() {
+		stopWatchStarted=false;
 		stop = Instant.now();
 	}
 	

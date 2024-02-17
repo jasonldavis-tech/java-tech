@@ -43,8 +43,9 @@ public class StoryOutlineUtil {
 				villainStringWriter.append(villain+" ");
 			});
 			
-			storyOutline.write(villainStringWriter.toString()+"\n");
-			logger.fine(villainStringWriter.toString());
+			String villainsList = removeBadCombinationsFilter(villainStringWriter.toString());
+			storyOutline.write("Random Villain List - "+villainsList+"\n");
+			logger.fine(villainsList);
 			
 			final StringWriter descriptivePhraseWriter = new StringWriter();
 			
@@ -73,4 +74,25 @@ public class StoryOutlineUtil {
 			storyOutline.write(andButThereforeWriter.toString());
 			return storyOutline.toString();
 	}
+	
+	public static String removeBadCombinationsFilter(String villainList) {
+		// Mean this to be for story, Fires and Ghost too reminiscent of KKK, other combinations might be a problem for other localities (I live in Texas, Southern USA)
+		ArrayList<String> combinationsFind = new ArrayList<>();
+		combinationsFind.add("Forest Fire, Ghost");
+		combinationsFind.add("Ghost, Forest Fire");
+		ArrayList<String> combinationsReplace = new ArrayList<>();
+		combinationsReplace.add("");
+		combinationsReplace.add("");
+		
+		for (int i=0; i<combinationsFind.size(); i++) {
+			villainList = villainList.replaceAll(combinationsFind.get(i), combinationsReplace.get(i));	
+		}
+		
+		return villainList;
+	}
+	
+	public static void main(String args[]) {
+		System.out.println(generateStoryOutline());
+	}
+	
 }

@@ -1,5 +1,6 @@
 package random;
 
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.OptionalDouble;
 import java.util.random.RandomGenerator;
@@ -32,5 +33,15 @@ public class RandomUtil {
 	
 	public static int getRandomNumber(int lowerBound, int upperBound) {
 		return randomGenerator.nextInt(lowerBound, upperBound);
+	}
+	
+	public static String getRandomNumberString(int size) {
+		StringWriter token = new StringWriter();
+		
+		for (int i=0; i<size; i++) {
+			token.append(""+getRandomNumber(0, 9));
+		}
+		
+		return token.toString();
 	}
 }

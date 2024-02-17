@@ -18,7 +18,8 @@ public class DescriptiveWritingUtil {
 			"amplified", "magnified", "infused", "inspired", "encouraged", "provided", "shifted",
 			"directed", "commanded", "whispered", "enlightened", "opened", "closed", "delivered",
 			"transported", "refined", "relayed", "communicated", "eroded", "halted", "blocked",
-			"accelerated", "evaded", "dodged", "unfurled", "typed", "wrote", "painted", "sculpted"
+			"accelerated", "evaded", "dodged", "unfurled", "typed", "wrote", "painted", "sculpted",
+			"radiated", "blocked", "bent", "broken", "locked", "unlocked"
 		};
 		
 		
@@ -39,7 +40,8 @@ public class DescriptiveWritingUtil {
 			"tranquil", "placid", "blue", "orange", "red", "green", "yellow", "purple", "shaded",
 			"tinted", "saturated", "toned", "angry", "sad", "happy", "joyful", "delightful", "blissful",
 			"memorable", "diminished", "exalted", "beguiling", "critical", "important", "proper", "biased",
-			"pink", "violet", "cyan", "beige", "gray", "black", "white", "vibrant", "resonant", "harmonious"
+			"pink", "violet", "cyan", "brown", "beige", "gray", "black", "white", "vibrant", "resonant", "harmonious",
+			"royal blue", "sky blue", "light green", "glowing", "radiating", "charming", "hypnotic"
 		};
 		
 		
@@ -55,7 +57,7 @@ public class DescriptiveWritingUtil {
 		
 		String arrayOfSpectacularNouns[] = {
 			"ruby", "sapphire", "emerald", "amber", "amethyst", "gold", "silver", "titanium",
-			"aluminum", "steel", "neon", "zeon", "oxygen", "nitrogen", "carbon", "lightning",
+			"aluminum", "steel", "neon", "xenon", "oxygen", "nitrogen", "carbon", "lightning",
 			"wave", "photon", "spectrum", "energy", "watts", "joules", "kilogram", "meter",
 			"kilometer", "blackhole", "neutron", "star", "neutron star", "gas giant", "moon",
 			"jet", "rocket", "tank", "ship", "super-car", "beach", "desert", "imagination",

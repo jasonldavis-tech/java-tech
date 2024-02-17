@@ -1,5 +1,7 @@
 package data;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.util.List;
 
 public class StringParseUtil {
@@ -16,6 +18,11 @@ public class StringParseUtil {
 		sentence = sentence.trim();
 		String words[] = sentence.split(" ");
 		return words.length;
+	}
+	
+	public static InputStream convertStringToInputStream(String data) {
+			ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(data.getBytes());
+			return byteArrayInputStream;
 	}
 
 }

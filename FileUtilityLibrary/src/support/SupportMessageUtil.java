@@ -37,6 +37,7 @@ public class SupportMessageUtil {
 		    "Protection from Tyrants",
 		    "Protection from Dictators",
 		    "Protection from Genocide",
+		    "Protection from Sexual Violence",
 		    "Freedom of Speech",
 		    "Freedom of the Press",
 			"Glass of Water",

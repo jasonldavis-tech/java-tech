@@ -20,6 +20,7 @@ public class SupportMessageUtil {
 		}
 		
 		String arrayOfSupportMessageTypes[] = {
+			"Nonviolent Resistance",
 		    "Protection from Antisemitism",
 		    "Protection of Palestinians",
 		    "Protection of Rwandans",

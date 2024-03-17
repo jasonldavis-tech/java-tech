@@ -15,6 +15,7 @@ public class CriticalThinkingAmpsUtil {
 		}
 		
 		String arrayOfCriticalThinkingAmps[] = {
+			"Nonviolence",
 			"Propaganda",
 			"Antisemitism",
 			"Narrative Control",

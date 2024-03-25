@@ -27,6 +27,7 @@ public class SupportMessageUtil {
 		    "Protection of Cambodians",
 		    "Protection of Rohingyans",
 		    "Protection of Yemenis",
+		    "Protection of Bengalis",
 		    "Protection of Jews",
 		    "Protection of Christians",
 		    "Protection of Muslims",
